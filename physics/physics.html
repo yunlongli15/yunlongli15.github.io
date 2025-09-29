@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物理学习资源 - yunlongli15.github.io</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 引入MathJax库 -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #9b59b6;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background: linear-gradient(120deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-3px);
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+        }
+        
+        .btn-primary:hover {
+            background: #8e44ad;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin: 50px 0 30px;
+            font-size: 2.2rem;
+            color: var(--primary);
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: var(--secondary);
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+        
+        .modules {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .module-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .module-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .card-header {
+            padding: 25px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .card-header i {
+            font-size: 2rem;
+        }
+        
+        .card-body {
+            padding: 25px;
+        }
+        
+        .card-body h3 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .card-body p {
+            margin-bottom: 20px;
+            color: #555;
+        }
+        
+        .topics {
+            list-style-type: none;
+        }
+        
+        .topics li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .topics li:last-child {
+            border-bottom: none;
+        }
+        
+        .topics i {
+            color: var(--secondary);
+        }
+        
+        .knowledge-summary .card-header {
+            background: linear-gradient(120deg, #3498db, #2c3e50);
+        }
+        
+        .competition-analysis .card-header {
+            background: linear-gradient(120deg, #9b59b6, #3498db);
+        }
+        
+        .tech-frontier .card-header {
+            background: linear-gradient(120deg, #2ecc71, #3498db);
+        }
+        
+        .formula-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+        }
+        
+        .formula-section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+        
+        .formula-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .formula-card {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .formula-card:hover {
+            background: #d6eaf8;
+            transform: translateY(-5px);
+        }
+        
+        .formula-card h4 {
+            margin-bottom: 15px;
+            color: var(--primary);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 8px;
+        }
+        
+        .formula-content {
+            text-align: center;
+            font-size: 1.1rem;
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+        }
+        
+        .formula-desc {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .resources {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+        }
+        
+        .resources h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+        
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .resource-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: var(--light);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .resource-item:hover {
+            background: #d6eaf8;
+            transform: translateX(5px);
+        }
+        
+        .resource-item i {
+            font-size: 1.8rem;
+            color: var(--secondary);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            color: var(--primary);
+            border-top: 1px solid #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            .modules {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 80%;
+            }
+            
+            .formula-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>物理学习资源</h1>
+            <p>探索物理世界的奥秘，从基础理论到前沿科技</p>
+            <div class="subtitle">为物理爱好者和学习者提供的全面资源平台</div>
+            <div class="nav-buttons">
+                <a href="https://yunlongli15.github.io/" class="btn">返回首页</a>
+                <a href="#" class="btn btn-primary">联系作者</a>
+            </div>
+        </header>
+        
+        <h2 class="section-title">核心学习模块</h2>
+        
+        <div class="modules">
+            <div class="module-card knowledge-summary">
+                <div class="card-header">
+                    <i class="fas fa-atom"></i>
+                    <h3>知识点总结</h3>
+                </div>
+                <div class="card-body">
+                    <p>系统梳理物理学核心概念和理论框架，帮助建立完整的知识体系。</p>
+                    <ul class="topics">
+                        <li><i class="fas fa-calculator"></i> 力学与运动学</li>
+                        <li><i class="fas fa-bolt"></i> 电磁学与电路</li>
+                        <li><i class="fas fa-fire"></i> 热力学与统计物理</li>
+                        <li><i class="fas fa-lightbulb"></i> 光学与波动</li>
+                        <li><i class="fas fa-atom"></i> 量子力学基础</li>
+                        <li><i class="fas fa-star"></i> 相对论简介</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="module-card competition-analysis">
+                <div class="card-header">
+                    <i class="fas fa-trophy"></i>
+                    <h3>竞赛题目分析</h3>
+                </div>
+                <div class="card-body">
+                    <p>深入解析各类物理竞赛题目，提供解题思路和技巧。</p>
+                    <ul class="topics">
+                        <li><i class="fas fa-puzzle-piece"></i> 物理奥林匹克竞赛题解</li>
+                        <li><i class="fas fa-brain"></i> 难题解析与思路拓展</li>
+                        <li><i class="fas fa-chart-line"></i> 竞赛策略与备考指南</li>
+                        <li><i class="fas fa-vial"></i> 实验设计与操作技巧</li>
+                        <li><i class="fas fa-history"></i> 历年真题与趋势分析</li>
+                        <li><i class="fas fa-users"></i> 模拟试题与答案解析</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="module-card tech-frontier">
+                <div class="card-header">
+                    <i class="fas fa-rocket"></i>
+                    <h3>科技前沿领域</h3>
+                </div>
+                <div class="card-body">
+                    <p>探索物理学在现代科技中的应用和最新研究进展。</p>
+                    <ul class="topics">
+                        <li><i class="fas fa-microchip"></i> 量子计算与信息</li>
+                        <li><i class="fas fa-satellite"></i> 空间科学与天体物理</li>
+                        <li><i class="fas fa-magnet"></i> 凝聚态物理与材料科学</li>
+                        <li><i class="fas fa-radiation"></i> 核能与粒子物理</li>
+                        <li><i class="fas fa-sun"></i> 新能源技术与应用</li>
+                        <li><i class="fas fa-dna"></i> 生物物理与医学影像</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="formula-section">
+            <h2>经典物理公式</h2>
+            <div class="formula-grid">
+                <div class="formula-card">
+                    <h4>牛顿第二定律</h4>
+                    <div class="formula-content">
+                        $$F = ma$$
+                    </div>
+                    <p class="formula-desc">物体加速度与作用力成正比，与质量成反比，方向与作用力方向相同。</p>
+                </div>
+                
+                <div class="formula-card">
+                    <h4>万有引力定律</h4>
+                    <div class="formula-content">
+                        $$F = G\frac{m_1 m_2}{r^2}$$
+                    </div>
+                    <p class="formula-desc">任何两个质点都存在通过其连心线方向上的相互吸引的力，与质量的乘积成正比，与距离的平方成反比。</p>
+                </div>
+                
+                <div class="formula-card">
+                    <h4>质能方程</h4>
+                    <div class="formula-content">
+                        $$E = mc^2$$
+                    </div>
+                    <p class="formula-desc">质量和能量是等价的，可以通过这个公式相互转换，c是真空中的光速。</p>
+                </div>
+                
+                <div class="formula-card">
+                    <h4>薛定谔方程</h4>
+                    <div class="formula-content">
+                        $$i\hbar\frac{\partial}{\partial t}\Psi = \hat{H}\Psi$$
+                    </div>
+                    <p class="formula-desc">量子力学中描述微观粒子状态随时间变化的基本方程。</p>
+                </div>
+                
+                <div class="formula-card">
+                    <h4>麦克斯韦方程组</h4>
+                    <div class="formula-content">
+                        $$\begin{aligned}
+                        \nabla \cdot \mathbf{E} &= \frac{\rho}{\varepsilon_0} \\
+                        \nabla \cdot \mathbf{B} &= 0 \\
+                        \nabla \times \mathbf{E} &= -\frac{\partial \mathbf{B}}{\partial t} \\
+                        \nabla \times \mathbf{B} &= \mu_0\mathbf{J} + \mu_0\varepsilon_0\frac{\partial \mathbf{E}}{\partial t}
+                        \end{aligned}$$
+                    </div>
+                    <p class="formula-desc">描述电场、磁场与电荷密度、电流密度之间关系的偏微分方程组。</p>
+                </div>
+                
+                <div class="formula-card">
+                    <h4>热力学第一定律</h4>
+                    <div class="formula-content">
+                        $$\Delta U = Q - W$$
+                    </div>
+                    <p class="formula-desc">系统内能的增量等于系统吸收的热量减去系统对外所做的功。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="resources">
+            <h2>学习资源与工具</h2>
+            <div class="resource-grid">
+                <div class="resource-item">
+                    <i class="fas fa-book"></i>
+                    <div>
+                        <h4>推荐教材</h4>
+                        <p>经典物理教材与参考书</p>
+                    </div>
+                </div>
+                <div class="resource-item">
+                    <i class="fas fa-video"></i>
+                    <div>
+                        <h4>视频课程</h4>
+                        <p>优质物理教学视频</p>
+                    </div>
+                </div>
+                <div class="resource-item">
+                    <i class="fas fa-calculator"></i>
+                    <div>
+                        <h4>物理模拟</h4>
+                        <p>交互式物理实验模拟</p>
+                    </div>
+                </div>
+                <div class="resource-item">
+                    <i class="fas fa-file-pdf"></i>
+                    <div>
+                        <h4>习题集</h4>
+                        <p>分类习题与详细解答</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>物理学习资源页面 &copy; 2023 | yunlongli15.github.io</p>
+            <p>探索 · 理解 · 创新</p>
+        </footer>
+    </div>
+
+    <script>
+        // 添加简单的交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.module-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // 为资源项添加点击效果
+            const resourceItems = document.querySelectorAll('.resource-item');
+            resourceItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    alert('资源详情功能开发中...');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
