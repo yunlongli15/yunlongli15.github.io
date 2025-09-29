@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> 物理</title>
+    <title> 物理竞赛以及考试试题</title>
     <link rel="stylesheet" href="/style/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- MathJax配置 -->
@@ -27,7 +27,7 @@
         <div class="nav-container">
             <a href="https://yunlongli15.github.io/" class="logo">
                 <i class="fas fa-atom"></i>
-                物理
+                物理学习
             </a>
             
             <button class="mobile-menu-btn" id="mobileMenuBtn">
@@ -35,29 +35,48 @@
             </button>
             
             <ul class="nav-links" id="navLinks">                
-		<li><a href="physics.html" class="nav-link active" data-module="knowledge">主页</a></li>
+		<li><a href="physics.html" class="nav-link active" data-module="knowledge">引言</a></li>
                 <li><a href="knowledge.html" class="nav-link active" data-module="knowledge">知识点总结</a></li>
                 <li><a href="competition.html" class="nav-link" data-module="competition">竞赛题目分析</a></li>
                 <li><a href="frontier.html" class="nav-link" data-module="frontier">科技前沿领域</a></li>
                 <li><a href="resources.html" class="nav-link" data-module="resources">学习资源</a></li>
+
             </ul>
         </div>
     </nav>
 
     <div class="main-container">
         <aside class="sidebar">
-            <div class="sidebar-section">
-                <h3 class="sidebar-title">引言</h3>
+           <div class="sidebar-section">
+                <h3 class="sidebar-title">物理竞赛以及考试分类</h3>
                 <ul class="sidebar-links">
-                    <li><a href="#mechanics" class="sidebar-link active">引言</a></li>
+                    <li><a href="#olympiad" class="sidebar-link active" data-topic="olympiad">物理奥林匹克竞赛</a></li>
+                    <li><a href="#problem-solving" class="sidebar-link" data-topic="problem-solving">难题解析与思路</a></li>
+                    <li><a href="#strategy" class="sidebar-link" data-topic="strategy">竞赛策略与备考</a></li>
+                    <li><a href="#experiments" class="sidebar-link" data-topic="experiments">实验设计与操作</a></li>
+                    <li><a href="#past-papers" class="sidebar-link" data-topic="past-papers">历年真题分析</a></li>
+                    <li><a href="#simulation" class="sidebar-link" data-topic="simulation">模拟试题解析</a></li>
                 </ul>
             </div>
         </aside>
 
         <main class="main-content">
-            <div class="content-header">
-                <h1>引言</h1>
-                <p>系统梳理物理学核心概念和理论框架</p>
+                <div class="content-header">
+                    <h1>竞赛题目分析</h1>
+                    <p>深入解析各类物理竞赛题目，提供解题思路和技巧</p>
+                </div>
+                
+                <div id="olympiad-content" class="topic-section">
+                    <h2>物理奥林匹克竞赛</h2>
+                    <p>国际物理奥林匹克竞赛（IPhO）和中国物理奥林匹克竞赛（CPhO）的题目解析。</p>
+                    
+                    <ul class="topic-list">
+                        <li><i class="fas fa-puzzle-piece"></i> 力学综合题解析 - 复杂系统的受力分析和运动学计算</li>
+                        <li><i class="fas fa-bolt"></i> 电磁学难题精讲 - 电场、磁场的综合应用题目</li>
+                        <li><i class="fas fa-lightbulb"></i> 光学与波动题目 - 干涉、衍射和光学仪器</li>
+                        <li><i class="fas fa-atom"></i> 近代物理应用题 - 相对论和量子力学基础</li>
+                    </ul>
+                </div>
             </div>
         </main>
     </div>
