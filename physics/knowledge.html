@@ -24,7 +24,23 @@
 </head>
 <body>
     <nav class="top-nav">
-        <!-- 相同的导航结构 -->
+        <div class="nav-container">
+            <a href="https://yunlongli15.github.io/" class="logo">
+                <i class="fas fa-atom"></i>
+                物理学习资源
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <ul class="nav-links" id="navLinks">
+                <li><a href="knowledge.html" class="nav-link active" data-module="knowledge">知识点总结</a></li>
+                <li><a href="competition.html" class="nav-link" data-module="competition">竞赛题目分析</a></li>
+                <li><a href="frontier.html" class="nav-link" data-module="frontier">科技前沿领域</a></li>
+                <li><a href="resources.html" class="nav-link" data-module="resources">学习资源</a></li>
+            </ul>
+        </div>
     </nav>
 
     <div class="main-container">
@@ -32,9 +48,12 @@
             <div class="sidebar-section">
                 <h3 class="sidebar-title">知识点分类</h3>
                 <ul class="sidebar-links">
-                    <li><a href="#mechanics" class="active">力学与运动学</a></li>
-                    <li><a href="#electromagnetism">电磁学与电路</a></li>
-                    <!-- 更多链接 -->
+                    <li><a href="#mechanics" class="sidebar-link active">力学与运动学</a></li>
+                    <li><a href="#electromagnetism" class="sidebar-link">电磁学与电路</a></li>
+                     <li><a href="#thermodynamics" class="sidebar-link" data-topic="thermodynamics">热力学与统计物理</a></li>
+                    <li><a href="#optics" class="sidebar-link" data-topic="optics">光学与波动</a></li>
+                    <li><a href="#quantum" class="sidebar-link" data-topic="quantum">量子力学基础</a></li>
+                    <li><a href="#relativity" class="sidebar-link" data-topic="relativity">相对论简介</a></li>
                 </ul>
             </div>
         </aside>
@@ -46,13 +65,46 @@
             </div>
             
             <div id="mechanics" class="topic-section">
-                <!-- 具体内容 -->
+                    <h2>力学与运动学</h2>
+                    <p>经典力学的基础，研究物体运动规律和受力情况。</p>
+                    
+                    <div class="formula-grid">
+                        <div class="formula-card">
+                            <h4>牛顿第二定律</h4>
+                            <div class="formula-content">
+                                $$F = ma$$
+                            </div>
+                            <p class="formula-desc">物体加速度与作用力成正比，与质量成反比。</p>
+                        </div>
+                        <div class="formula-card">
+                            <h4>动能定理</h4>
+                            <div class="formula-content">
+                                $$W = \Delta E_k$$
+                            </div>
+                            <p class="formula-desc">合外力对物体所做的功等于物体动能的增量。</p>
+                        </div>
+                        <div class="formula-card">
+                            <h4>动量定理</h4>
+                            <div class="formula-content">
+                                $$F\Delta t = \Delta p$$
+                            </div>
+                            <p class="formula-desc">物体所受合外力的冲量等于物体动量的变化。</p>
+                        </div>
+                    </div>
             </div>
+
+            <div id="electromagnetism-content" class="topic-section" style="display: none;">
+                    <h2>电磁学与电路</h2>
+                    <p>研究电、磁现象及其相互关系的物理学分支。</p>
+                    <!-- 电磁学内容 -->
+            </div>
+
         </main>
     </div>
 
     <footer>
-        <!-- 相同的页脚 -->
+        <p>物理学习资源页面 &copy; 2023 | yunlongli15.github.io</p>
+        <p>探索 · 理解 · 创新</p>
     </footer>
 
     <script src="/style/script.js"></script>
