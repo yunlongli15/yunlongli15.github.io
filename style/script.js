@@ -2,11 +2,13 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     const navLinks = document.querySelectorAll('.nav-link');
+    const sidebarLinks = document.querySelectorAll('.gsc-index-item a');
     const sidebarSections = document.querySelectorAll('.sidebar-section');
     const moduleContents = document.querySelectorAll('.module-content');
     const sidebarLinks = document.querySelectorAll('.sidebar-link');
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const navLinksContainer = document.getElementById('navLinks');
+    const indexItems = document.querySelectorAll('.gsc-index-item');
 
     // 动态加载模块内容的函数
     function loadModule(moduleUrl, topicId = null) {
@@ -99,28 +101,31 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // 修改侧边栏链接点击事件，支持动态加载
-    sidebarLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const sidebarSection = this.closest('.sidebar-section');
-            const module = sidebarSection.id.replace('-sidebar', '');
-            const topic = this.getAttribute('data-topic');
-            const topicUrl = this.getAttribute('data-url'); // 新增：获取主题URL
-            
-            // 更新侧边栏激活状态
-            sidebarLinks.forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
-            
-            // 如果有主题URL，使用动态加载
-            if (topicUrl) {
-                loadModule(topicUrl, topic);
-            } else {
-                // 原有的显示内容逻辑
-                showTopicContent(module, topic);
-            }
-        });
-    });
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const url = this.getAttribute('data-url');
+                    if (url) {
+                        // 更新侧边栏激活状态
+                        sidebarLinks.forEach(l => l.closest('.gsc-index-item').classList.remove('active'));
+                        this.closest('.gsc-index-item').classList.add('active');
+                        
+                        // 加载模块内容
+                        loadModule(url);
+                    } else {
+                        // 处理展开/折叠
+                        const parentItem = this.closest('.gsc-index-item');
+                        if (parentItem.classList.contains('gsc-index-item-closed')) {
+                            parentItem.classList.remove('gsc-index-item-closed');
+                            parentItem.classList.add('gsc-index-item-open');
+                        } else {
+                            parentItem.classList.remove('gsc-index-item-open');
+                            parentItem.classList.add('gsc-index-item-closed');
+                        }
+                    }
+                });
+            });
 
     // 显示特定主题内容（原有功能保留）
     function showTopicContent(module, topic) {
@@ -145,6 +150,25 @@ document.addEventListener('DOMContentLoaded', function() {
     mobileMenuBtn.addEventListener('click', function() {
         navLinksContainer.classList.toggle('active');
     });
+	
+	            // 初始化索引项点击事件（展开/折叠）
+            indexItems.forEach(item => {
+                const actionElements = item.querySelectorAll('.gsc-index-item-action');
+                actionElements.forEach(action => {
+                    action.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        if (item.classList.contains('gsc-index-item-closed')) {
+                            item.classList.remove('gsc-index-item-closed');
+                            item.classList.add('gsc-index-item-open');
+                        } else {
+                            item.classList.remove('gsc-index-item-open');
+                            item.classList.add('gsc-index-item-closed');
+                        }
+                    });
+                });
+            });
 
     // 页面加载时可选：加载默认模块
     const defaultNavLink = document.querySelector('.nav-link.active, .nav-link:first-child');
