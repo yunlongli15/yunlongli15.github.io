@@ -8,81 +8,150 @@ document.addEventListener('DOMContentLoaded', function() {
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const navLinksContainer = document.getElementById('navLinks');
 
-    // 顶部导航点击事件
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-        e.preventDefault();
+    // 动态加载模块内容的函数
+    function loadModule(moduleUrl, topicId = null) {
+        // 显示加载状态
+        const contentArea = document.getElementById('main-content-area') || document.querySelector('.module-content');
+        if (contentArea) {
+            contentArea.innerHTML = '<div class="loading">加载中...</div>';
+        }
+        
+        // 使用fetch API加载模块内容
+        fetch(moduleUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('网络响应不正常');
+                }
+                return response.text();
+            })
+            .then(html => {
+                // 将加载的内容插入到内容区域
+                if (contentArea) {
+                    contentArea.innerHTML = html;
                     
-        // 更新导航激活状态
-        navLinks.forEach(l => l.classList.remove('active'));
-        this.classList.add('active');
-                    
-                    const module = this.getAttribute('data-module');
-                    
-                    // 隐藏所有侧边栏和内容
-                    sidebarSections.forEach(section => section.style.display = 'none');
-                    moduleContents.forEach(content => content.style.display = 'none');
-                    
-                    // 显示对应的侧边栏和内容
-                    const targetSidebar = document.getElementById(`${module}-sidebar`);
-                    const targetContent = document.getElementById(`${module}-content`);
-                    
-                    if (targetSidebar) targetSidebar.style.display = 'block';
-                    if (targetContent) targetContent.style.display = 'block';
-                    // 重置侧边栏链接激活状态
-                    if (targetSidebar) {
-                        const firstLink = targetSidebar.querySelector('.sidebar-link');
-                        if (firstLink) {
-                            sidebarLinks.forEach(l => l.classList.remove('active'));
-                            firstLink.classList.add('active');
-                            
-                            // 显示对应的内容
-                            const topic = firstLink.getAttribute('data-topic');
-                            showTopicContent(module, topic);
+                    // 如果有特定的主题ID，滚动到该位置
+                    if (topicId) {
+                        const targetElement = document.getElementById(topicId);
+                        if (targetElement) {
+                            targetElement.scrollIntoView({ behavior: 'smooth' });
                         }
                     }
                     
-                    // 移动端关闭菜单
-                    if (window.innerWidth <= 768) {
-                        navLinksContainer.classList.remove('active');
+                    // 重新渲染MathJax公式
+                    if (window.MathJax) {
+                        MathJax.typeset();
                     }
-                });
+                }
+            })
+            .catch(error => {
+                console.error('加载模块时出错:', error);
+                if (contentArea) {
+                    contentArea.innerHTML = 
+                        '<div class="error">加载内容时出错，请稍后重试。</div>';
+                }
             });
+    }
 
-            // 侧边栏链接点击事件
-            sidebarLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    const sidebarSection = this.closest('.sidebar-section');
-                    const module = sidebarSection.id.replace('-sidebar', '');
-                    const topic = this.getAttribute('data-topic');
-                    
-                    // 更新侧边栏激活状态
-                    sidebarLinks.forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // 显示对应内容
-                    showTopicContent(module, topic);
-                });
-            });
-
-            // 显示特定主题内容
-            function showTopicContent(module, topic) {
-                // 隐藏该模块下的所有主题内容
-                const moduleContent = document.getElementById(`${module}-content`);
-                const topicSections = moduleContent.querySelectorAll('.topic-section');
-                topicSections.forEach(section => section.style.display = 'none');
+    // 修改导航点击事件，支持动态加载
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // 更新导航激活状态
+            navLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            
+            const module = this.getAttribute('data-module');
+            const moduleUrl = this.getAttribute('data-url'); // 新增：获取模块URL
+            
+            // 如果有模块URL，使用动态加载
+            if (moduleUrl) {
+                loadModule(moduleUrl);
+            } else {
+                // 原有的显示/隐藏逻辑
+                sidebarSections.forEach(section => section.style.display = 'none');
+                moduleContents.forEach(content => content.style.display = 'none');
                 
-                // 显示目标主题内容
-                const targetSection = document.getElementById(`${topic}-content`);
-                if (targetSection) {
-                    targetSection.style.display = 'block';
+                const targetSidebar = document.getElementById(`${module}-sidebar`);
+                const targetContent = document.getElementById(`${module}-content`);
+                
+                if (targetSidebar) targetSidebar.style.display = 'block';
+                if (targetContent) targetContent.style.display = 'block';
+                
+                // 重置侧边栏链接激活状态
+                if (targetSidebar) {
+                    const firstLink = targetSidebar.querySelector('.sidebar-link');
+                    if (firstLink) {
+                        sidebarLinks.forEach(l => l.classList.remove('active'));
+                        firstLink.classList.add('active');
+                        
+                        const topic = firstLink.getAttribute('data-topic');
+                        showTopicContent(module, topic);
+                    }
                 }
             }
             
-            // 移动端菜单切换
-            mobileMenuBtn.addEventListener('click', function() {
-                navLinksContainer.classList.toggle('active');
-            });
+            // 移动端关闭菜单
+            if (window.innerWidth <= 768) {
+                navLinksContainer.classList.remove('active');
+            }
+        });
+    });
+
+    // 修改侧边栏链接点击事件，支持动态加载
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const sidebarSection = this.closest('.sidebar-section');
+            const module = sidebarSection.id.replace('-sidebar', '');
+            const topic = this.getAttribute('data-topic');
+            const topicUrl = this.getAttribute('data-url'); // 新增：获取主题URL
+            
+            // 更新侧边栏激活状态
+            sidebarLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            
+            // 如果有主题URL，使用动态加载
+            if (topicUrl) {
+                loadModule(topicUrl, topic);
+            } else {
+                // 原有的显示内容逻辑
+                showTopicContent(module, topic);
+            }
+        });
+    });
+
+    // 显示特定主题内容（原有功能保留）
+    function showTopicContent(module, topic) {
+        const moduleContent = document.getElementById(`${module}-content`);
+        if (moduleContent) {
+            const topicSections = moduleContent.querySelectorAll('.topic-section');
+            topicSections.forEach(section => section.style.display = 'none');
+            
+            const targetSection = document.getElementById(`${topic}-content`);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                
+                // 重新渲染MathJax公式（如果是动态内容）
+                if (window.MathJax) {
+                    MathJax.typeset();
+                }
+            }
         }
+    }
+    
+    // 移动端菜单切换
+    mobileMenuBtn.addEventListener('click', function() {
+        navLinksContainer.classList.toggle('active');
+    });
+
+    // 页面加载时可选：加载默认模块
+    const defaultNavLink = document.querySelector('.nav-link.active, .nav-link:first-child');
+    if (defaultNavLink) {
+        const moduleUrl = defaultNavLink.getAttribute('data-url');
+        if (moduleUrl) {
+            loadModule(moduleUrl);
+        }
+    }
+});
