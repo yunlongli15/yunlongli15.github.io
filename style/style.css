@@ -272,16 +272,26 @@ body {
             display: none;
         }
 
-        .gsc-index-item-closed .gsc-index-item-open {
-            display: flex;
-        }
-        .gsc-index-item-open .gsc-index-item-closed {
-            display: flex;
-        }
+		
+/* 修正折叠展开样式 */
+.gsc-index-item-closed .gsc-index-item-children {
+    display: none;
+}
 
-        .gsc-index-item-open .gsc-index-item-open {
-            display: none;
-        }
+.gsc-index-item-open .gsc-index-item-children {
+    display: block;
+}
+
+/* 修正箭头旋转效果 */
+.gsc-index-item-closed .gsc-index-item-action svg {
+    transform: rotate(0deg);
+    transition: transform 0.3s ease;
+}
+
+.gsc-index-item-open .gsc-index-item-action svg {
+    transform: rotate(90deg);
+    transition: transform 0.3s ease;
+}
 
         .gsc-index-item-children {
             margin-left: 20px;

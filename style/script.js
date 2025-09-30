@@ -2,7 +2,6 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     const navLinks = document.querySelectorAll('.nav-link');
-    const sidebarLinks = document.querySelectorAll('.gsc-index-item > a'); // 只选择直接子元素
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const navLinksContainer = document.getElementById('navLinks');
     const indexItems = document.querySelectorAll('.gsc-index-item');
@@ -10,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 动态加载模块内容的函数
     function loadModule(moduleUrl, topicId = null) {
         // 显示加载状态
-        const contentArea = document.getElementById('main-content-area') || document.querySelector('.module-content');
+        const contentArea = document.getElementById('main-content-area');
         if (contentArea) {
             contentArea.innerHTML = '<div class="loading">加载中...</div>';
         }
@@ -28,14 +27,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (contentArea) {
                     contentArea.innerHTML = html;
                     
-                    // 如果有特定的主题ID，滚动到该位置
-                    if (topicId) {
-                        const targetElement = document.getElementById(topicId);
-                        if (targetElement) {
-                            targetElement.scrollIntoView({ behavior: 'smooth' });
-                        }
-                    }
-                    
                     // 重新渲染MathJax公式
                     if (window.MathJax) {
                         MathJax.typeset();
@@ -51,21 +42,13 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    // 顶部导航点击事件
+    // 顶部导航点击事件 - 修复
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // 更新导航激活状态
+            // 移除 active 类从所有导航链接
             navLinks.forEach(l => l.classList.remove('active'));
+            // 添加 active 类到当前点击的链接
             this.classList.add('active');
-            
-            const moduleUrl = this.getAttribute('href');
-            
-            // 如果有模块URL，使用动态加载
-            if (moduleUrl && moduleUrl !== '#') {
-                loadModule(moduleUrl);
-            }
             
             // 移动端关闭菜单
             if (window.innerWidth <= 768) {
@@ -74,69 +57,70 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // 侧边栏链接点击事件
-    sidebarLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const url = this.getAttribute('data-url');
-            
-            // 如果有子菜单，处理展开/折叠
-            const parentItem = this.closest('.gsc-index-item');
-            const hasChildren = parentItem.querySelector('.gsc-index-item-children');
-            
-            if (hasChildren) {
-                // 切换展开/折叠状态
-                if (parentItem.classList.contains('gsc-index-item-closed')) {
-                    parentItem.classList.remove('gsc-index-item-closed');
-                    parentItem.classList.add('gsc-index-item-open');
-                } else {
-                    parentItem.classList.remove('gsc-index-item-open');
-                    parentItem.classList.add('gsc-index-item-closed');
-                }
-            } else if (url) {
-                // 更新侧边栏激活状态
-                document.querySelectorAll('.gsc-index-item').forEach(item => {
-                    item.classList.remove('active');
-                });
-                parentItem.classList.add('active');
-                
-                // 加载模块内容
-                loadModule(url);
-            }
-        });
-    });
-
-    // 初始化索引项点击事件（展开/折叠）
+    // 侧边栏项目点击事件 - 完全重写
     indexItems.forEach(item => {
-        const actionElements = item.querySelectorAll('.gsc-index-item-action');
-        actionElements.forEach(action => {
-            action.addEventListener('click', function(e) {
+        const link = item.querySelector('a');
+        const actionBtn = item.querySelector('.gsc-index-item-action');
+        const children = item.querySelector('.gsc-index-item-children');
+        
+        // 如果有子菜单，处理展开/折叠
+        if (children) {
+            // 主链接点击 - 切换展开/折叠
+            link.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 
-                if (item.classList.contains('gsc-index-item-closed')) {
-                    item.classList.remove('gsc-index-item-closed');
-                    item.classList.add('gsc-index-item-open');
-                } else {
-                    item.classList.remove('gsc-index-item-open');
-                    item.classList.add('gsc-index-item-closed');
+                toggleItem(item);
+            });
+            
+            // 动作按钮点击 - 同样切换展开/折叠
+            if (actionBtn) {
+                actionBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    toggleItem(item);
+                });
+            }
+        } else {
+            // 没有子菜单的项 - 加载内容
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const url = this.getAttribute('data-url');
+                if (url) {
+                    // 移除所有active类
+                    indexItems.forEach(i => i.classList.remove('active'));
+                    // 添加active类到当前项
+                    item.classList.add('active');
+                    
+                    // 加载内容
+                    loadModule(url);
                 }
             });
-        });
+        }
     });
+
+    // 切换项目展开/折叠状态的函数
+    function toggleItem(item) {
+        const isClosed = item.classList.contains('gsc-index-item-closed');
+        const isOpen = item.classList.contains('gsc-index-item-open');
+        
+        if (isClosed) {
+            item.classList.remove('gsc-index-item-closed');
+            item.classList.add('gsc-index-item-open');
+        } else if (isOpen) {
+            item.classList.remove('gsc-index-item-open');
+            item.classList.add('gsc-index-item-closed');
+        } else {
+            // 初始状态处理
+            item.classList.add('gsc-index-item-open');
+        }
+    }
 
     // 移动端菜单切换
     mobileMenuBtn.addEventListener('click', function() {
         navLinksContainer.classList.toggle('active');
     });
-
-    // 页面加载时可选：加载默认模块
-    const defaultNavLink = document.querySelector('.nav-link.active, .nav-link:first-child');
-    if (defaultNavLink) {
-        const moduleUrl = defaultNavLink.getAttribute('href');
-        if (moduleUrl && moduleUrl !== '#') {
-            loadModule(moduleUrl);
-        }
-    }
 });
