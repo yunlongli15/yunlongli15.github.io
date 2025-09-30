@@ -1,11 +1,8 @@
-// script.js - 物理学习资源网站交互功能
+// script.js - 数学学习资源网站交互功能
 
 document.addEventListener('DOMContentLoaded', function() {
     const navLinks = document.querySelectorAll('.nav-link');
-    const sidebarLinks = document.querySelectorAll('.gsc-index-item a');
-    const sidebarSections = document.querySelectorAll('.sidebar-section');
-    const moduleContents = document.querySelectorAll('.module-content');
-    const sidebarLinks = document.querySelectorAll('.sidebar-link');
+    const sidebarLinks = document.querySelectorAll('.gsc-index-item > a'); // 只选择直接子元素
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const navLinksContainer = document.getElementById('navLinks');
     const indexItems = document.querySelectorAll('.gsc-index-item');
@@ -54,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    // 修改导航点击事件，支持动态加载
+    // 顶部导航点击事件
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
@@ -63,34 +60,11 @@ document.addEventListener('DOMContentLoaded', function() {
             navLinks.forEach(l => l.classList.remove('active'));
             this.classList.add('active');
             
-            const module = this.getAttribute('data-module');
-            const moduleUrl = this.getAttribute('data-url'); // 新增：获取模块URL
+            const moduleUrl = this.getAttribute('href');
             
             // 如果有模块URL，使用动态加载
-            if (moduleUrl) {
+            if (moduleUrl && moduleUrl !== '#') {
                 loadModule(moduleUrl);
-            } else {
-                // 原有的显示/隐藏逻辑
-                sidebarSections.forEach(section => section.style.display = 'none');
-                moduleContents.forEach(content => content.style.display = 'none');
-                
-                const targetSidebar = document.getElementById(`${module}-sidebar`);
-                const targetContent = document.getElementById(`${module}-content`);
-                
-                if (targetSidebar) targetSidebar.style.display = 'block';
-                if (targetContent) targetContent.style.display = 'block';
-                
-                // 重置侧边栏链接激活状态
-                if (targetSidebar) {
-                    const firstLink = targetSidebar.querySelector('.sidebar-link');
-                    if (firstLink) {
-                        sidebarLinks.forEach(l => l.classList.remove('active'));
-                        firstLink.classList.add('active');
-                        
-                        const topic = firstLink.getAttribute('data-topic');
-                        showTopicContent(module, topic);
-                    }
-                }
             }
             
             // 移动端关闭菜单
@@ -100,81 +74,68 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // 修改侧边栏链接点击事件，支持动态加载
-            sidebarLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    const url = this.getAttribute('data-url');
-                    if (url) {
-                        // 更新侧边栏激活状态
-                        sidebarLinks.forEach(l => l.closest('.gsc-index-item').classList.remove('active'));
-                        this.closest('.gsc-index-item').classList.add('active');
-                        
-                        // 加载模块内容
-                        loadModule(url);
-                    } else {
-                        // 处理展开/折叠
-                        const parentItem = this.closest('.gsc-index-item');
-                        if (parentItem.classList.contains('gsc-index-item-closed')) {
-                            parentItem.classList.remove('gsc-index-item-closed');
-                            parentItem.classList.add('gsc-index-item-open');
-                        } else {
-                            parentItem.classList.remove('gsc-index-item-open');
-                            parentItem.classList.add('gsc-index-item-closed');
-                        }
-                    }
-                });
-            });
-
-    // 显示特定主题内容（原有功能保留）
-    function showTopicContent(module, topic) {
-        const moduleContent = document.getElementById(`${module}-content`);
-        if (moduleContent) {
-            const topicSections = moduleContent.querySelectorAll('.topic-section');
-            topicSections.forEach(section => section.style.display = 'none');
+    // 侧边栏链接点击事件
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
             
-            const targetSection = document.getElementById(`${topic}-content`);
-            if (targetSection) {
-                targetSection.style.display = 'block';
-                
-                // 重新渲染MathJax公式（如果是动态内容）
-                if (window.MathJax) {
-                    MathJax.typeset();
+            const url = this.getAttribute('data-url');
+            
+            // 如果有子菜单，处理展开/折叠
+            const parentItem = this.closest('.gsc-index-item');
+            const hasChildren = parentItem.querySelector('.gsc-index-item-children');
+            
+            if (hasChildren) {
+                // 切换展开/折叠状态
+                if (parentItem.classList.contains('gsc-index-item-closed')) {
+                    parentItem.classList.remove('gsc-index-item-closed');
+                    parentItem.classList.add('gsc-index-item-open');
+                } else {
+                    parentItem.classList.remove('gsc-index-item-open');
+                    parentItem.classList.add('gsc-index-item-closed');
                 }
+            } else if (url) {
+                // 更新侧边栏激活状态
+                document.querySelectorAll('.gsc-index-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                parentItem.classList.add('active');
+                
+                // 加载模块内容
+                loadModule(url);
             }
-        }
-    }
-    
+        });
+    });
+
+    // 初始化索引项点击事件（展开/折叠）
+    indexItems.forEach(item => {
+        const actionElements = item.querySelectorAll('.gsc-index-item-action');
+        actionElements.forEach(action => {
+            action.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (item.classList.contains('gsc-index-item-closed')) {
+                    item.classList.remove('gsc-index-item-closed');
+                    item.classList.add('gsc-index-item-open');
+                } else {
+                    item.classList.remove('gsc-index-item-open');
+                    item.classList.add('gsc-index-item-closed');
+                }
+            });
+        });
+    });
+
     // 移动端菜单切换
     mobileMenuBtn.addEventListener('click', function() {
         navLinksContainer.classList.toggle('active');
     });
-	
-	            // 初始化索引项点击事件（展开/折叠）
-            indexItems.forEach(item => {
-                const actionElements = item.querySelectorAll('.gsc-index-item-action');
-                actionElements.forEach(action => {
-                    action.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        
-                        if (item.classList.contains('gsc-index-item-closed')) {
-                            item.classList.remove('gsc-index-item-closed');
-                            item.classList.add('gsc-index-item-open');
-                        } else {
-                            item.classList.remove('gsc-index-item-open');
-                            item.classList.add('gsc-index-item-closed');
-                        }
-                    });
-                });
-            });
 
     // 页面加载时可选：加载默认模块
     const defaultNavLink = document.querySelector('.nav-link.active, .nav-link:first-child');
     if (defaultNavLink) {
-        const moduleUrl = defaultNavLink.getAttribute('data-url');
-        if (moduleUrl) {
+        const moduleUrl = defaultNavLink.getAttribute('href');
+        if (moduleUrl && moduleUrl !== '#') {
             loadModule(moduleUrl);
         }
     }
