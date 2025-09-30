@@ -268,10 +268,6 @@ body {
             color: #1e3c72;
         }
 
-        .gsc-index-item-open {
-            display: none;
-        }
-
 		
 /* 修正折叠展开样式 */
 .gsc-index-item-closed .gsc-index-item-children {
@@ -291,6 +287,19 @@ body {
 .gsc-index-item-open .gsc-index-item-action svg {
     transform: rotate(90deg);
     transition: transform 0.3s ease;
+}
+
+/* 确保子菜单项正确缩进 */
+.gsc-index-item-children .gsc-index-item {
+    margin-left: 0;
+}
+
+.gsc-index-item-children .gsc-index-item a {
+    padding-left: 24px; /* 子项缩进 */
+}
+
+.gsc-index-item-children .gsc-index-item-marker {
+    min-width: 28px; /* 为子项编号留更多空间 */
 }
 
         .gsc-index-item-children {
