@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 顶部导航点击事件
-    navLinks.forEach(link => {
+    navLinks.forEach(link => { 
         link.addEventListener('click', function(e) {
             navLinks.forEach(l => l.classList.remove('active'));
             this.classList.add('active');
@@ -40,29 +40,53 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // 侧边栏项目点击事件 - 简化版本
-    indexItems.forEach(item => {
-        const link = item.querySelector('a');
-        const hasChildren = item.querySelector('.gsc-index-item-children');
+// 侧边栏项目点击事件 - 修正版本
+indexItems.forEach(item => {
+    const link = item.querySelector('a');
+    const children = item.querySelector('.gsc-index-item-children');
+    
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
         
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
+        // 检查是否有子菜单
+        if (children) {
+            // 有子菜单：只处理展开/折叠，不加载内容
+            e.stopPropagation(); // 阻止事件冒泡
             
-            if (hasChildren) {
-                // 有子菜单：切换展开/折叠
-                item.classList.toggle('gsc-index-item-closed');
-                item.classList.toggle('gsc-index-item-open');
-            } else {
-                // 没有子菜单：加载内容
-                const url = this.getAttribute('data-url');
-                if (url) {
-                    indexItems.forEach(i => i.classList.remove('active'));
-                    item.classList.add('active');
-                    loadModule(url);
+            // 切换展开状态
+            const isClosed = item.classList.contains('gsc-index-item-closed');
+            
+            // 先关闭所有同级菜单（可选）
+            const siblings = Array.from(item.parentElement.children);
+            siblings.forEach(sibling => {
+                if (sibling !== item && sibling.classList.contains('gsc-index-item-open')) {
+                    sibling.classList.remove('gsc-index-item-open');
+                    sibling.classList.add('gsc-index-item-closed');
                 }
+            });
+            
+            // 切换当前项状态
+            if (isClosed) {
+                item.classList.remove('gsc-index-item-closed');
+                item.classList.add('gsc-index-item-open');
+            } else {
+                item.classList.remove('gsc-index-item-open');
+                item.classList.add('gsc-index-item-closed');
             }
-        });
+        } else {
+            // 没有子菜单：加载内容
+            const url = this.getAttribute('data-url');
+            if (url) {
+                // 移除其他项的active状态
+                indexItems.forEach(i => i.classList.remove('active'));
+                // 添加当前项active状态
+                item.classList.add('active');
+                // 加载模块内容
+                loadModule(url);
+            }
+        }
     });
+});
 
     // 移动端菜单切换
     mobileMenuBtn.addEventListener('click', function() {
