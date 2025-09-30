@@ -239,6 +239,11 @@ body {
             transition: color 0.2s;
         }
 
+.gsc-index-item-action svg {
+    width: 16px;
+    height: 16px;
+}
+
         .gsc-index-item-action:hover {
             color: #1e3c72;
         }
