@@ -73,18 +73,19 @@ indexItems.forEach(item => {
                 item.classList.remove('gsc-index-item-open');
                 item.classList.add('gsc-index-item-closed');
             }
-        } else {
-            // 没有子菜单：加载内容
-            const url = this.getAttribute('data-url');
-            if (url) {
-                // 移除其他项的active状态
-                indexItems.forEach(i => i.classList.remove('active'));
-                // 添加当前项active状态
-                item.classList.add('active');
-                // 加载模块内容
-                loadModule(url);
-            }
+        } 
+		
+		// 没有子菜单：加载内容
+        const url = this.getAttribute('data-url');
+        if (url) {
+            // 移除其他项的active状态
+            indexItems.forEach(i => i.classList.remove('active'));
+            // 添加当前项active状态
+            item.classList.add('active');
+            // 加载模块内容
+            loadModule(url);
         }
+
     });
 });
 
