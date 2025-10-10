@@ -19,7 +19,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .then(html => {
                     contentArea.innerHTML = html;
-                    if (window.MathJax) MathJax.typeset();
+					// 使用 MathJax 的最新 API 渲染数学公式
+					if (window.MathJax) {
+						// 方法1: 使用 typesetPromise (推荐)
+						if (MathJax.typesetPromise) {
+							MathJax.typesetPromise([contentArea]).then(() => {
+								console.log('MathJax 渲染完成');
+							}).catch(error => {
+								console.warn('MathJax 渲染警告:', error);
+							});
+						}
+						// 方法2: 重新配置并启动 MathJax
+						else {
+							console.log('重新初始化 MathJax');
+							MathJax.startup.document.state(0);
+							MathJax.texReset();
+							MathJax.typesetClear();
+							MathJax.typesetPromise([contentArea]);
+						}
+					}
                 })
                 .catch(error => {
                     console.error('加载模块时出错:', error);
